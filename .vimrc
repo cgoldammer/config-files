@@ -14,3 +14,6 @@ nnoremap <C-c><C-v> :SlimuxREPLConfigure<CR>
 
 # Treat all numbers as decimal
 set nrformats=
+
+colorscheme ron
+# Swanson
