@@ -17,3 +17,5 @@ set nrformats=
 
 colorscheme ron
 # Swanson
+
+set wildmode=longest,list
