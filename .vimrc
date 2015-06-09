@@ -19,3 +19,5 @@ colorscheme ron
 # Swanson
 
 set wildmode=longest,list
+
+set history=2000
