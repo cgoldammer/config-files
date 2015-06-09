@@ -12,11 +12,9 @@ nnoremap <C-c><C-c> :SlimuxREPLSendLine<CR>
 vnoremap <C-c><C-c> :SlimuxREPLSendSelection<CR>
 nnoremap <C-c><C-v> :SlimuxREPLConfigure<CR>
 
-# Treat all numbers as decimal
 set nrformats=
 
 colorscheme ron
-# Swanson
 
 set wildmode=longest,list
 
