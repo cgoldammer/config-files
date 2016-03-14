@@ -5,7 +5,12 @@ set hlsearch incsearch
 let mapleader = ","
 let maplocalleader = "\\"
 filetype plugin indent on " Activate filetype plugins. See :help filetype and :help ftplugin
-set history=2000
+if &history < 1000
+    set history=1000
+endif
+if &tabpagemax < 50
+    set tabpagemax=50
+endif
 colorscheme ron
 " nrformats sets how <c-a> and <c-x> work. We exclude all options,
 " thus not accepting octals and letters.
@@ -29,7 +34,6 @@ execute pathogen#infect()
 
 " Run grep with <leader>g
 :nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
-" }}}
 
 " Set a timeout of 100ms on commands
 set ttimeout
@@ -41,14 +45,8 @@ set sidescrolloff=5
 
 set formatoptions+=j " Delete comment character when joining commented lines
 
-if &history < 1000
-    set history=1000
-endif
-if &tabpagemax < 50
-    set tabpagemax=50
-endif
-
-
+nnoremap <leader>af :Autoformat<cr>
+" }}}
 
 " Slimux setup {{{
 let g:slime_target = "tmux"
@@ -100,6 +98,7 @@ set winheight=10
 set winminheight=10
 set winheight=999
 " }}}
+
 " Disable arrow keys in normal and insert mode {{{
 noremap <Up> <NOP>
 noremap <Down> <NOP>
@@ -111,8 +110,6 @@ inoremap <Down> <NOP>
 inoremap <Left> <NOP>
 inoremap <Right> <NOP>
 " }}}
-
-nnoremap <leader>af :Autoformat<cr>
 
 " Commands for markdown {{{
 augroup filetype_markdown
@@ -130,27 +127,34 @@ augroup filetype_vim
 augroup END
 " }}}
 
+" Setting the status line - {{{
 set statusline=%20F\ -\ 
 set statusline+=FileType:%y\ -\  
 set statusline+=Last\ changed:\ %{strftime('%c',getftime(expand('%')))}
 set statusline+=%=Line:\ %4l/%L
+" }}}
 
-" Syntastic setup (disabled for now) {{{
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-" 
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 0
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_python_checkers = ['flake8']
-" 
-" let g:syntastic_mode_map = {
-"             \ "mode": "passive",
-"             \ "active_filetypes": [],
-"             \ "passive_filetypes": [] }
-" " }}}
+" Syntastic setup {{{
+" To install the required packages, run:
+" cd ~/.vim/bundle && \
+" git clone https://github.com/scrooloose/syntastic.git
+" pip install flake8
+"
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+" Using flake8 as python checker. Needs to be pip-installed first.
+let g:syntastic_python_checkers = ['flake8']
+let g:syntastic_python_flake8_args='--max-line-length=120'
+let g:syntastic_mode_map = {
+         \ "mode": "passive",
+         \ "active_filetypes": [],
+         \ "passive_filetypes": [] }
+" }}}
 
 " Commands for python {{{
 augroup filetype_python
@@ -158,7 +162,8 @@ augroup filetype_python
     autocmd FileType python :iabbrev <buffer> fff def():<esc>F(i
     autocmd FileType python :iabbrev <buffer> def USEAUTOUSEAUTO
     " Fix the autopep8 syntax
-    autocmd FileType python let g:formatdef_autopep8 = '"autopep8 - "' 
+    autocmd FileType python let g:formatdef_custom_python = '"autopep8 - --max-line-length=120"'
+    autocmd FileType python let g:formatters_python = ['custom_python']   
 
     " Comment with <localleader>c
     autocmd fileType python nnoremap <buffer> <localleader>c 0I# <esc>
@@ -170,13 +175,10 @@ augroup filetype_python
     autocmd FileType python set autoindent          " copy indent from current line when starting a new line
 
     " Mark lines in red if they exceed the maximum line length
-    autocmd FileType python let g:formatdef_custom_python = '"max-line-length 120"'
-    autocmd FileType python let g:formatters_python = ['custom_python']
     autocmd FileType python highlight OverLength ctermbg=red ctermfg=white guibg=#592929
     autocmd FileType python match OverLength /\%121v.\+/
 augroup END
 " }}}
-
 
 " Commands for yaml {{{
 
@@ -215,13 +217,8 @@ augroup filetype_javascript
 augroup END
 " }}}
 
-" Open up the vimrc in split window
-noremap <leader>ev :vsplit $MYVIMRC<cr>
-" Reload the vimrc file
-noremap <leader>sv :source $MYVIMRC<cr>
 
 " Loading helper functions
-
 " I keep the vimrc in a git repo. The ~/.vimrc is just a symbolic link to the
 " .vimrc in the folder of the git repo. We extract this folder since it
 " contains the helper files I am loading later.
