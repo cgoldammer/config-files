@@ -57,7 +57,7 @@ nnoremap <C-c><C-v> :SlimuxREPLConfigure<CR>
 nmap <leader>d <C-c><C-c>j
 vmap <leader>d <C-c><C-c><esc>
 
--- This fixes an error when sending multiple lines to the REPL
+"This fixes an error when sending multiple lines to the REPL
 let w:slimux_python_allowed_indent0 = ["elif", "else", "except", "finally"]
 " }}}
 
