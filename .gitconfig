@@ -1,7 +1,3 @@
-[user]
-	name = "cgoldammer"
-	email = "goldammer.christian@gmail.com"
-
 [alias]
   co = checkout
   ci = commit
