@@ -52,6 +52,9 @@ nnoremap <leader>af :Autoformat<cr>
 let g:slime_target = "tmux"
 nnoremap <C-c><C-c> :SlimuxREPLSendLine<CR>
 vnoremap <C-c><C-c> :SlimuxREPLSendSelection<CR>
+vnoremap <C-c><C-c> :<C-w>SlimuxShellRun %cpaste<cr>:'<,'>SlimuxREPLSendSelection<CR>:SlimuxShellRun --<cr>
+vnoremap <leader>a :SlimuxREPLSendSelection<CR> 
+
 nnoremap <C-c><C-v> :SlimuxREPLConfigure<CR>
 "Run selection then move to next line
 nmap <leader>d <C-c><C-c>j
@@ -140,7 +143,7 @@ set statusline+=%=Line:\ %4l/%L
 " Syntastic setup {{{
 " To install the required packages, run:
 " cd ~/.vim/bundle && \
-" git clone https://github.com/scrooloose/syntastic.git
+" git clone https://github.com/vim-syntastic/syntastic
 " pip install flake8
 "
 set statusline+=%#warningmsg#
