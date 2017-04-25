@@ -234,3 +234,14 @@ for file in helper_files
 	:execute "source " . vimrc_folder . '/vim/' . file . '.vim'
 endfor
 
+" Reload a python file: <leader>br (for 'bind reload'). Prompt as for module to
+" reload.
+function! BindReloadModule()
+    let name = input('Enter module names, separated by space: ')
+    " :execute ":nnoremap <leader>w :w<cr>:SlimuxShellRun imp.reload(" . name . ")<cr>"
+    let arguments = split(name, " ")
+    let command = "imp.reload(" . join(arguments, "); imp.reload(") . ");"
+    :execute ":nnoremap <leader>w :w<cr>:SlimuxShellRun " . command . "<cr>"
+endfunction
+:nnoremap <leader>br :call BindReloadModule()<cr>
+
