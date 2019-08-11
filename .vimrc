@@ -1,3 +1,29 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'epeli/slimux'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'scrooloose/syntastic'
+Plugin 'Chiel92/vim-autoformat'
+call vundle#end()
+
+" Tmux navigator setup {{{
+let g:tmux_navigator_no_mappings = 1
+:nnoremap <c-h> :TmuxNavigateLeft<cr>
+:nnoremap <silent> <esc>[5D <c-w>j :TmuxNavigateDown<cr>
+:nnoremap <c-k> :TmuxNavigateUp<cr>
+:nnoremap <c-l> :TmuxNavigateRight<cr>
+:nnoremap <c-\> :TmuxNavigatePrevious<cr>
+" }}}
+
 " Various general setup commands {{{
 set number
 syntax on
@@ -6,10 +32,10 @@ let mapleader = ","
 let maplocalleader = "\\"
 filetype plugin indent on " Activate filetype plugins. See :help filetype and :help ftplugin
 if &history < 1000
-    set history=1000
+  set history=1000
 endif
 if &tabpagemax < 50
-    set tabpagemax=50
+  set tabpagemax=50
 endif
 colorscheme ron
 " nrformats sets how <c-a> and <c-x> work. We exclude all options,
@@ -29,9 +55,6 @@ noremap <leader>sv :source $MYVIMRC<cr>
 " Convert word to uppercase in insert mode
 inoremap <c-u> <esc>vawgUea
 
-" Automatically running all packages in ~/.vim/bundle
-execute pathogen#infect() 
-
 " Run grep with <leader>g
 :nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
 
@@ -42,9 +65,6 @@ set ttimeoutlen=100
 " Number of lines visible above and below the cursor
 set scrolloff=2
 set sidescrolloff=5
-
-set formatoptions+=j " Delete comment character when joining commented lines
-
 nnoremap <leader>af :Autoformat<cr>
 " }}}
 
@@ -62,19 +82,6 @@ vmap <leader>d <C-c><C-c><esc>
 
 "This fixes an error when sending multiple lines to the REPL
 let w:slimux_python_allowed_indent0 = ["elif", "else", "except", "finally"]
-" }}}
-
-" Installing vundle packages {{{
-set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'Chiel92/vim-autoformat'
-Bundle 'christoomey/vim-tmux-navigator'
-call vundle#end()            " required
-filetype plugin indent on    " required
-filetype on
 " }}}
 
 " Opening and managing files {{{
@@ -119,17 +126,17 @@ inoremap <Right> <NOP>
 
 " Commands for markdown {{{
 augroup filetype_markdown
-    autocmd!
-    " Operator for preceeding header
-    onoremap ih :<c-u>execute "normal! ?^\(==\|--\)\\+$\r:nohlsearch\rkvg_"<cr>
+  autocmd!
+  " Operator for preceeding header
+  onoremap ih :<c-u>execute "normal! ?^\(==\|--\)\\+$\r:nohlsearch\rkvg_"<cr>
 augroup END
 " }}}
 
 " Vimscript file settings -- {{{
 augroup filetype_vim
-    autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
-    noremap <localleader>f za
+  autocmd!
+  autocmd FileType vim setlocal foldmethod=marker
+  noremap <localleader>f za
 augroup END
 " }}}
 
@@ -140,12 +147,6 @@ set statusline+=Last\ changed:\ %{strftime('%c',getftime(expand('%')))}
 set statusline+=%=Line:\ %4l/%L
 " }}}
 
-" Syntastic setup {{{
-" To install the required packages, run:
-" cd ~/.vim/bundle && \
-" git clone https://github.com/vim-syntastic/syntastic
-" pip install flake8
-"
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -157,70 +158,9 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_python_checkers = ['flake8']
 let g:syntastic_python_flake8_args='--max-line-length=120'
 let g:syntastic_mode_map = {
-         \ "mode": "passive",
-         \ "active_filetypes": [],
-         \ "passive_filetypes": [] }
-" }}}
-
-" Commands for python {{{
-augroup filetype_python
-    autocmd!
-    autocmd FileType python :iabbrev <buffer> fff def():<esc>F(i
-    autocmd FileType python :iabbrev <buffer> def USEAUTOUSEAUTO
-    " Fix the autopep8 syntax
-    autocmd FileType python let g:formatdef_custom_python = '"autopep8 - --max-line-length=120"'
-    autocmd FileType python let g:formatters_python = ['custom_python']   
-
-    " Comment with <localleader>c
-    autocmd fileType python nnoremap <buffer> <localleader>c 0I# <esc>
-
-    autocmd FileType python set expandtab           " enter spaces when tab is pressed
-    autocmd FileType python set tabstop=4           " use 4 spaces to represent tab
-    autocmd FileType python set softtabstop=4
-    autocmd FileType python set shiftwidth=4        " number of spaces to use for auto indent
-    autocmd FileType python set autoindent          " copy indent from current line when starting a new line
-
-    " Mark lines in red if they exceed the maximum line length
-    autocmd FileType python highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-    autocmd FileType python match OverLength /\%121v.\+/
-augroup END
-" }}}
-
-" Commands for yaml {{{
-
-" Vim doesn't auto-detect the yaml format. Thus, setting it manually for 
-" any file with a .yml extension
-au BufNewFile,BufRead *.yml setlocal ft=yaml
-augroup filetype_yaml
-    autocmd!
-    autocmd FileType yaml set expandtab           " enter spaces when tab is pressed
-    autocmd FileType yaml set tabstop=2           " use 2 spaces to represent tab
-    autocmd FileType yaml set softtabstop=2
-    autocmd FileType yaml set shiftwidth=2        " number of spaces to use for auto indent
-    autocmd FileType yaml set autoindent          " copy indent from current line when starting a new line
-augroup END
-" }}}
-
-" Commands for haskell {{{
-augroup filetype_haskell
-    autocmd!
-    autocmd FileType haskell set expandtab           " enter spaces when tab is pressed
-    autocmd FileType haskell set tabstop=4           " use 4 spaces to represent tab
-    autocmd FileType haskell set softtabstop=4
-    autocmd FileType haskell set shiftwidth=4        " number of spaces to use for auto indent
-    autocmd FileType haskell set autoindent          " copy indent from current line when starting a new line
-augroup END
-" }}}
-
-" Commands for javascript {{{
-augroup filetype_javascript
-    autocmd!
-    autocmd FileType haskell set expandtab           " enter spaces when tab is pressed
-    autocmd FileType haskell set tabstop=4           " use 4 spaces to represent tab
-    autocmd FileType haskell set softtabstop=4
-    autocmd FileType haskell set shiftwidth=4        " number of spaces to use for auto indent
-    autocmd FileType haskell set autoindent          " copy indent from current line when starting a new line
-augroup END
+   \ "mode": "passive",
+   \ "active_filetypes": [],
+   \ "passive_filetypes": [] }
 " }}}
 
 
@@ -231,17 +171,78 @@ augroup END
 let vimrc_folder = substitute(system('dirname $(readlink -f ~/.vimrc)'), "\n", "", "")
 let helper_files = ['functional', 'helpers']
 for file in helper_files
-	:execute "source " . vimrc_folder . '/vim/' . file . '.vim'
+  :execute "source " . vimrc_folder . '/vim/' . file . '.vim'
+  :echo "hi"
 endfor
 
 " Reload a python file: <leader>br (for 'bind reload'). Prompt as for module to
 " reload.
 function! BindReloadModule()
-    let name = input('Enter module names, separated by space: ')
-    " :execute ":nnoremap <leader>w :w<cr>:SlimuxShellRun imp.reload(" . name . ")<cr>"
-    let arguments = split(name, " ")
-    let command = "imp.reload(" . join(arguments, "); imp.reload(") . ");"
-    :execute ":nnoremap <leader>w :w<cr>:SlimuxShellRun " . command . "<cr>"
+  let name = input('Enter module names, separated by space: ')
+  " :execute ":nnoremap <leader>w :w<cr>:SlimuxShellRun imp.reload(" . name . ")<cr>"
+  let arguments = split(name, " ")
+  let command = "imp.reload(" . join(arguments, "); imp.reload(") . ");"
+  :execute ":nnoremap <leader>w :w<cr>:SlimuxShellRun " . command . "<cr>"
 endfunction
 :nnoremap <leader>br :call BindReloadModule()<cr>
+nnoremap <leader>af :Autoformat<cr>
+" }}}
+
+function! SetTab(length)
+  :set expandtab
+  :set autoindent
+  :execute "set tabstop=" . a:length
+  :execute "set softtabstop=" . a:length
+  :execute "set shiftwidth=" . a:length
+endfunction
+
+:nnoremap ,q2 :call SetTab(2)<cr>
+:nnoremap ,q4 :call SetTab(4)<cr>
+
+:call SetTab(4) " By default, indent 4 spaces.
+
+" Commands for python {{{
+augroup filetype_python
+  autocmd!
+  autocmd FileType python :iabbrev <buffer> fff def():<esc>F(i
+  autocmd FileType python :iabbrev <buffer> def USEAUTOUSEAUTO
+  " Fix the autopep8 syntax
+  autocmd FileType python let g:formatdef_custom_python = '"autopep8 - --max-line-length=120"'
+  autocmd FileType python let g:formatters_python = ['custom_python']   
+
+  " Comment with <localleader>c
+  autocmd fileType python nnoremap <buffer> <localleader>c 0I# <esc>
+  autocmd fileType python :call SetTab(4)
+
+  " Mark lines in red if they exceed the maximum line length
+  autocmd FileType python highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+  autocmd FileType python match OverLength /\%121v.\+/
+augroup END
+" }}}
+
+" Commands for yaml {{{
+
+" Vim doesn't auto-detect the yaml format. Thus, setting it manually for 
+" any file with a .yml extension
+au BufNewFile,BufRead *.yml setlocal ft=yaml
+augroup filetype_yaml
+  autocmd!
+  autocmd FileType yaml set expandtab           " enter spaces when tab is pressed
+  autocmd FileType yaml :call SetTab(2)
+augroup END
+" }}}
+
+" Commands for haskell {{{
+augroup filetype_haskell
+  autocmd!
+  autocmd FileType haskell :call SetTab(4)
+augroup END
+" }}}
+
+" Commands for javascript {{{
+augroup filetype_javascript
+  autocmd!
+  autocmd FileType haskell :call SetTab(4)
+augroup END
+" }}}
 
