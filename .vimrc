@@ -13,6 +13,7 @@ Plugin 'epeli/slimux'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'scrooloose/syntastic'
 Plugin 'Chiel92/vim-autoformat'
+Plugin 'wincent/command-t'
 call vundle#end()
 
 " Tmux navigator setup {{{
@@ -172,7 +173,6 @@ let vimrc_folder = substitute(system('dirname $(readlink -f ~/.vimrc)'), "\n", "
 let helper_files = ['functional', 'helpers']
 for file in helper_files
   :execute "source " . vimrc_folder . '/vim/' . file . '.vim'
-  :echo "hi"
 endfor
 
 " Reload a python file: <leader>br (for 'bind reload'). Prompt as for module to
