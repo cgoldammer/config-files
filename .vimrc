@@ -6,14 +6,12 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
 Plugin 'epeli/slimux'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'scrooloose/syntastic'
 Plugin 'Chiel92/vim-autoformat'
-Plugin 'wincent/command-t'
 call vundle#end()
 
 " Tmux navigator setup {{{
@@ -169,7 +167,7 @@ let g:syntastic_mode_map = {
 " I keep the vimrc in a git repo. The ~/.vimrc is just a symbolic link to the
 " .vimrc in the folder of the git repo. We extract this folder since it
 " contains the helper files I am loading later.
-let vimrc_folder = substitute(system('dirname $(readlink -f ~/.vimrc)'), "\n", "", "")
+let vimrc_folder = substitute(system('dirname $(readlink ~/.vimrc)'), "\n", "", "")
 let helper_files = ['functional', 'helpers']
 for file in helper_files
   :execute "source " . vimrc_folder . '/vim/' . file . '.vim'

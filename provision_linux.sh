@@ -20,12 +20,8 @@ if [ ! -d ~/.vim/bundle/Vundle.vim ]; then
   git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 fi
 
-if [ ! -d ~/config-files ]; then 
-  git clone https://github.com/cgoldammer/config-files.git ~/config-files
-fi
-
-ln -sf ~/config-files/.vimrc ~/.vimrc
-ln -sf ~/config-files/.tmux.conf ~/.tmux.conf
+ln -sf ./.vimrc ~/.vimrc
+ln -sf ./.tmux.conf ~/.tmux.conf
 
 vim +PluginInstall +qall
 
